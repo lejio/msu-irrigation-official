@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import Background from "../assets/hero_background.jpg";
+import Background2 from "../assets/hero_background2.png";
+import Background3 from "../assets/hero_background3.png";
 ---
 
 <main>
@@ -10,15 +12,24 @@ import Background from "../assets/hero_background.jpg";
     <div class="relative w-[95vw] h-full overflow-hidden rounded-2xl">
       <!-- Actual image -->
       <Image
-        src={Background}
+        src={Background3}
         alt="Background Farmland"
         class="w-full h-full object-cover"
       />
 
       <!-- Dim overlay exactly covering the image -->
       <div
-        class="absolute inset-0 bg-black bg-opacity-15 pointer-events-none"
-      ></div>
+        class="absolute inset-0 bg-black bg-opacity-20 pointer-events-none flex flex-col justify-start align-middle p-[10vw]"
+      >
+        <h1 class="flex flex-col text-[5vw] font-bold text-white">
+          IRRIGATION<br />
+          LABORATORY<br />
+        </h1>
+        <h2 class="text-[#18453B] font-bold text-4xl">Pioneering Sustainable Agriculture</h2>
+        <h2 class="text-[#18453B] font-bold text-2xl">
+          MICHIGAN STATE UNIVERSITY
+        </h2>
+      </div>
     </div>
   </div>
 </main>

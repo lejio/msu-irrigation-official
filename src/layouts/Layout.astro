@@ -29,14 +29,9 @@ import Navbar from "../components/Navbar.astro";
 			}
         }
 
-        // Calculate once at start
-        updateNavRect();
-
-        // Recalculate on window resize
-        window.addEventListener("resize", updateNavRect);
-
         navItems.forEach((item) => {
           item.addEventListener("mouseenter", (event) => {
+			updateNavRect();
             const target = event.target as HTMLElement;
             // bounding rect of the hovered element
             const itemRect = target.getBoundingClientRect();
