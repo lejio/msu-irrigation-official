@@ -15,30 +15,6 @@ import Navbar from "../components/Navbar.astro";
     <Navbar />
     <slot />
     <script>
-      // document.addEventListener("DOMContentLoaded", () => {
-      //   const underline = document.getElementById("underline");
-      //   const navItems = document.querySelectorAll("nav ul li a");
-
-      //   if (!underline || !navItems) return;
-
-      //   navItems.forEach((item) => {
-      //     item.addEventListener("mouseenter", (event) => {
-      //       const target = event.target as HTMLElement;
-      // 	console.log(target, target.offsetLeft, target.offsetWidth);
-      //       const { offsetLeft, offsetWidth } = target;
-      //       underline.style.left = `${offsetLeft}px`;
-      //       underline.style.width = `${offsetWidth}px`;
-      //     });
-      //   });
-
-      //   // Reset underline on mouse leave
-      //   const nav = document.querySelector("nav ul");
-      //   if (nav && underline) {
-      //     nav.addEventListener("mouseleave", () => {
-      //       underline.style.width = "0";
-      //     });
-      //   }
-      // });
       document.addEventListener("DOMContentLoaded", () => {
         const underline = document.getElementById("underline");
         const navItems = document.querySelectorAll("nav ul li a");
