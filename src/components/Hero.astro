@@ -1,0 +1,24 @@
+---
+import { Image } from "astro:assets";
+import Background from "../assets/hero_background.jpg";
+---
+
+<main>
+  <!-- Outer container handles layout -->
+  <div class="flex h-[90vh] w-[100vw] items-center justify-center">
+    <!-- Inner container matches the image’s size and is `relative` -->
+    <div class="relative w-[95vw] h-full overflow-hidden rounded-2xl">
+      <!-- Actual image -->
+      <Image
+        src={Background}
+        alt="Background Farmland"
+        class="w-full h-full object-cover"
+      />
+
+      <!-- Dim overlay exactly covering the image -->
+      <div
+        class="absolute inset-0 bg-black bg-opacity-15 pointer-events-none"
+      ></div>
+    </div>
+  </div>
+</main>
