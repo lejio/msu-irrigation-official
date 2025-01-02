@@ -1,34 +1,98 @@
 ---
-import Navbar from "../ui/Navbar.astro"
+import Navbar from "../components/Navbar.astro";
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>MSU Irrigation Laboratory</title>
-	</head>
-	<body>
-		<Navbar />
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>MSU Irrigation Laboratory</title>
+  </head>
+  <body>
+    <Navbar />
+    <slot />
+    <script>
+      // document.addEventListener("DOMContentLoaded", () => {
+      //   const underline = document.getElementById("underline");
+      //   const navItems = document.querySelectorAll("nav ul li a");
+
+      //   if (!underline || !navItems) return;
+
+      //   navItems.forEach((item) => {
+      //     item.addEventListener("mouseenter", (event) => {
+      //       const target = event.target as HTMLElement;
+      // 	console.log(target, target.offsetLeft, target.offsetWidth);
+      //       const { offsetLeft, offsetWidth } = target;
+      //       underline.style.left = `${offsetLeft}px`;
+      //       underline.style.width = `${offsetWidth}px`;
+      //     });
+      //   });
+
+      //   // Reset underline on mouse leave
+      //   const nav = document.querySelector("nav ul");
+      //   if (nav && underline) {
+      //     nav.addEventListener("mouseleave", () => {
+      //       underline.style.width = "0";
+      //     });
+      //   }
+      // });
+      document.addEventListener("DOMContentLoaded", () => {
+        const underline = document.getElementById("underline");
+        const navItems = document.querySelectorAll("nav ul li a");
+        const nav = document.querySelector("nav ul"); // or the relative container
+		let navRect: DOMRect;
+        if (!underline || !navItems || !nav) return;
+
+        function updateNavRect() {
+			if (nav) {
+				navRect = nav.getBoundingClientRect();
+			}
+        }
+
+        // Calculate once at start
+        updateNavRect();
+
+        // Recalculate on window resize
+        window.addEventListener("resize", updateNavRect);
+
+        navItems.forEach((item) => {
+          item.addEventListener("mouseenter", (event) => {
+            const target = event.target as HTMLElement;
+            // bounding rect of the hovered element
+            const itemRect = target.getBoundingClientRect();
+
+            // position of the hovered element relative to the nav container
+            const left = itemRect.left - navRect.left;
+            const width = itemRect.width;
+
+            underline.style.left = `${left}px`;
+            underline.style.width = `${width}px`;
+          });
+        });
+
+        nav.addEventListener("mouseleave", () => {
+          underline.style.width = "0";
+        });
+      });
+    </script>
+  </body>
 </html>
 
 <style is:global>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-	@font-face {
-		font-family: 'Garamond';
-		src: url('/fonts/EBGaramond-Regular.ttf') format('truetype');
-		font-weight: normal;
-		font-style: normal;
-	}
+  @font-face {
+    font-family: "Garamond";
+    src: url("/fonts/EBGaramond-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
 </style>

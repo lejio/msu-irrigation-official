@@ -1,0 +1,53 @@
+---
+import MSULogo from '../assets/combomark.svg';
+
+---
+<!-- 
+<nav class=" flex flex-row justify-between items-center px-10 py-4">
+    <div class=" flex flex-row gap-2 justify-center items-center">
+        <img src={MSULogo.src} alt="MSU Irrigation Laboratory" width="200" height="200" />
+        <h2 class=" font-garamond text-5xl text-center text-[#18453B]">IRRIGATION</h2>
+    </div>
+    <ul class=" flex flex-row items-center gap-5">
+        <li><a href="/research">Research</a></li>
+        <li><a href="/publications">Publications</a></li>
+        <li><a href="/news">News</a></li>
+        <li><a href="/team">Team</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/portal">Members</a></li>
+    </ul>
+</nav> -->
+
+<nav class="relative flex flex-row justify-between items-center px-10 py-4">
+    <div class="flex flex-row gap-2 justify-center items-center">
+        <img src={MSULogo.src} alt="MSU Irrigation Laboratory" width="200" height="200" />
+        <h2 class="font-garamond text-5xl text-center text-[#18453B]">IRRIGATION</h2>
+    </div>
+    <div class="relative">
+        <ul class="flex flex-row items-center gap-5">
+            <li class="group relative">
+                <a href="/research" class="hover:text-[#18453B] inline-block">Research</a>
+            </li>
+            <li class="group relative">
+                <a href="/publications" class="hover:text-[#18453B] inline-block">Publications</a>
+            </li>
+            <li class="group relative">
+                <a href="/news" class="hover:text-[#18453B] inline-block">News</a>
+            </li>
+            <li class="group relative">
+                <a href="/team" class="hover:text-[#18453B] inline-block">Team</a>
+            </li>
+            <li class="group relative">
+                <a href="/contact" class="hover:text-[#18453B] inline-block">Contact</a>
+            </li>
+            <li class="group relative">
+                <a href="/portal" class="hover:text-[#18453B] inline-block">Members</a>
+            </li>
+        </ul>
+        <!-- Underline element -->
+        <div
+            id="underline"
+            class="absolute bottom-0 h-[2px] bg-[#18453B] transition-all duration-300 ease-in-out pointer-events-none"
+        ></div>
+    </div>
+</nav>
