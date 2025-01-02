@@ -5,6 +5,7 @@ export default {
 		extend: {
 			fontFamily: {
 				'garamond': ['Garamond'],
+				'metropolis': ['Metropolis'],
 			},
 		},
 	},

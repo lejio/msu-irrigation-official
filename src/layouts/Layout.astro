@@ -8,6 +8,7 @@ import Navbar from "../components/Navbar.astro";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="stylesheet" href="/src/styles/fonts.css">
     <meta name="generator" content={Astro.generator} />
     <title>MSU Irrigation Laboratory</title>
   </head>
@@ -63,12 +64,8 @@ import Navbar from "../components/Navbar.astro";
     margin: 0;
     width: 100%;
     height: 100%;
+	font-family: "Metropolis", sans-serif;
+	font-weight: 400;
   }
 
-  @font-face {
-    font-family: "Garamond";
-    src: url("/fonts/EBGaramond-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-  }
 </style>
