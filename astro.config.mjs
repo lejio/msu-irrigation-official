@@ -16,10 +16,13 @@ export default defineConfig({
       dataset: "production",
       // Set useCdn to false if you're building statically.
       useCdn: true,
-      studioBasePath: '/studio'
+      studioBasePath: '/studio',
+      stega: {
+        studioUrl: "/studio",
+      },
     }),
     react(),
   ],
-
+  output: 'server',
   adapter: vercel(),
 });

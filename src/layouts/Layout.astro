@@ -1,5 +1,13 @@
 ---
-import Navbar from "../components/Navbar.astro";
+import Navbar from "../sections/Navbar.astro";
+import { VisualEditing } from "@sanity/astro/visual-editing";
+
+export type props = {
+  title: string;
+};
+const { title } = Astro.props;
+const visualEditingEnabled =
+  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED == "true";
 ---
 
 <!doctype html>
@@ -8,30 +16,31 @@ import Navbar from "../components/Navbar.astro";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-	<link rel="stylesheet" href="/src/styles/fonts.css">
+    <link rel="stylesheet" href="/src/styles/fonts.css" />
     <meta name="generator" content={Astro.generator} />
-    <title>MSU Irrigation Laboratory</title>
+    <title>{title}</title>
   </head>
   <body>
     <Navbar />
     <slot />
+    <VisualEditing enabled={visualEditingEnabled} zIndex={1000} />
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const underline = document.getElementById("underline");
         const navItems = document.querySelectorAll("nav ul li a");
         const nav = document.querySelector("nav ul"); // or the relative container
-		let navRect: DOMRect;
+        let navRect: DOMRect;
         if (!underline || !navItems || !nav) return;
 
         function updateNavRect() {
-			if (nav) {
-				navRect = nav.getBoundingClientRect();
-			}
+          if (nav) {
+            navRect = nav.getBoundingClientRect();
+          }
         }
 
         navItems.forEach((item) => {
           item.addEventListener("mouseenter", (event) => {
-			updateNavRect();
+            updateNavRect();
             const target = event.target as HTMLElement;
             // bounding rect of the hovered element
             const itemRect = target.getBoundingClientRect();
@@ -59,8 +68,7 @@ import Navbar from "../components/Navbar.astro";
     margin: 0;
     width: 100%;
     height: 100%;
-	font-family: "Metropolis", sans-serif;
-	font-weight: 400;
+    font-family: "Metropolis", sans-serif;
+    font-weight: 400;
   }
-
 </style>
