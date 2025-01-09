@@ -3,13 +3,14 @@ import { Image } from "astro:assets";
 import Background from "../assets/hero_background.jpg";
 import Background2 from "../assets/hero_background2.png";
 import Background3 from "../assets/hero_background3.png";
+import Outreach from "../assets/outreach.jpeg";
 ---
 
 <main>
   <!-- Outer container handles layout -->
-  <div class="flex h-[90vh] w-[100vw] items-center justify-center">
+  <div class="flex h-[90vh] w-[100vw]">
     <!-- Inner container matches the image’s size and is `relative` -->
-    <div class="relative w-[95vw] h-full overflow-hidden rounded-2xl">
+    <div class="relative h-[40vh] w-[100vw]">
       <!-- Actual image -->
       <Image
         src={Background3}
@@ -19,17 +20,24 @@ import Background3 from "../assets/hero_background3.png";
 
       <!-- Dim overlay exactly covering the image -->
       <div
-        class="absolute inset-0 bg-black bg-opacity-20 pointer-events-none flex flex-col justify-start align-middle p-[10vw]"
+        class="absolute inset-0 bg-black bg-opacity-20 pointer-events-none text-center flex flex-col justify-start align-middle p-[10vw]"
       >
-        <h1 class="flex flex-col text-[5vw] font-bold text-white">
-          Pioneering<br />
-          Sustanable<br />
-          Agriculture
-        </h1>
-        <h2 class="text-[#18453B] font-bold text-4xl">IRRIGATION LABORATORY</h2>
-        <h2 class="text-[#18453B] font-bold text-2xl">
-          MICHIGAN STATE UNIVERSITY
-        </h2>
+        <h1 class="flex flex-col text-8xl font-bold text-white">THE DONG</h1>
+        <p class="text-4xl text-[#eaffc6]">IRRIGATION LABORATORY</p>
+      </div>
+      <div class="static h-[50vh] w-full flex flex-row justify-evenly p-10">
+        <div class="flex flex-col justify-center text-left text-[#18453B] w-[40vw]">
+          <h2 class=" text-5xl">Welcome!</h2>
+          <br>
+          <p class="text-3xl">
+            Our mission is to promote efficient and sustainable irrigation
+            management through research and outreach activities to conserve
+            water and energy, improve disease management, reduce nutrient
+            leaching, increase crop yield and grain quality, and maximize return
+            on investments.
+          </p>
+        </div>
+        <Image src={Outreach} alt="MSU outreach" class="w-auto h-full" />
       </div>
     </div>
   </div>
