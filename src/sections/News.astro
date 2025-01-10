@@ -1,0 +1,38 @@
+---
+import { loadQuery } from "../sanity/lib/load-query";
+
+interface ContentItem {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
+const query = `*[_type == "article"] | order(publishedAt desc)[0...3] {
+  _id,
+  title,
+  "slug": slug.current,
+  "publishedAt": publishedAt,
+  
+
+}`;
+
+const { data } = await loadQuery<ContentItem[]>({
+  query,
+  params: {},
+});
+---
+
+<div class=" h-[70vh] w-full bg-[#18453B] flex flex-col justify-evenly items-left p-10">
+  <h1 class=" text-5xl text-[#eaffc6] text-center">Recent News</h1>
+  <div>
+    <ul class=" flex flex-row justify-evenly text-[#18453B]">
+        {
+          data.map((item: ContentItem) => (
+            <li class=" h-[400px] w-[400px] bg-white">
+              <a href={`/news/${item.slug}`}>{item.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+  </div>
+</div>

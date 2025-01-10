@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { loadQuery } from "../../sanity/lib/load-query";
+
+interface ContentItem {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
+const query = `*[_type == "article"]{
+  _id,
+  title,
+  "slug": slug.current
+}`;
+
+const { data } = await loadQuery<ContentItem[]>({
+  query,
+  params: {}, // Optional parameters if needed
+});
+---
+
+<Layout title="News">
+    <ul>
+        {data.map((item: ContentItem) => (
+          <li>
+            <a href={`/post/${item.slug}`}>{item.title}</a>
+          </li>
+        ))}
+      </ul>
+</Layout>

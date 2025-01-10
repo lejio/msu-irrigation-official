@@ -1,7 +1,117 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { loadQuery } from "../sanity/lib/load-query";
+import PortableText from "../components/PortableText.astro";
+
+interface Social {
+  name: string;
+  url: string;
+}
+
+interface Member {
+  name: string;
+  imageUrl?: string;
+  alt?: string;
+  bio: Array<any>;
+  socials: Social[];
+}
+
+interface Role {
+  Role: string;
+  People: Member[];
+}
+
+interface Members {
+  name: string;
+  people: Role[];
+}
+
+interface TextChild {
+  text: string;
+}
+
+interface Block {
+  children: TextChild[];
+}
+
+const query = `*[_type == "members"]{
+  name,
+  people[]{
+    Role,
+    People[]{
+      name,
+      "imageUrl": image.asset->url,
+      image{
+        alt
+      },
+      bio,
+      socials[]{
+        name,
+        url
+      }
+    }
+  }
+}`;
+
+const { data } = await loadQuery<Members[]>({
+  query,
+  params: {},
+});
 ---
 
 <Layout title="Team">
-    Team
+  <div class="flex flex-col items-center w-full">
+    <div class="p-20 bg-[#18453B] w-full">
+      <h1 class="text-white text-center text-5xl">Lab Members</h1>
+    </div>
+    <div class="p-20">
+      {
+        data[0]?.people.map((role: Role) => (
+          <section class=" p-10">
+            <h2 class=" text-4xl text-center">{role.Role}</h2>
+            <ul>
+              {role.People.map((member: Member) => (
+                <li class=" p-10">
+                  <div class=" flex flex-row gap-5">
+                    <img
+                      src={member.imageUrl}
+                      alt={member.alt || member.name}
+                      width="300"
+                    />
+                    <div>
+                      <h3 class=" text-3xl">{member.name}</h3>
+                      {member.bio && (
+                        <div>
+                          {member.bio.map((block: Block) => (
+                            <p>
+                              <PortableText portableText={block} />
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                      {member.socials && member.socials.length > 0 && (
+                        <ul>
+                          {member.socials.map((social) => (
+                            <li>
+                              <a
+                                href={social.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {social.name}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
 </Layout>

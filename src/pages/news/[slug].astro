@@ -28,6 +28,6 @@ const { data: post } = await loadQuery<{ title: string; body: any[] }>({
 ---
 
 <Layout>
-  <h1>A post about {post.title}</h1>
+  <h1>News: {post.title}</h1>
   <PortableText portableText={post.body} />
 </Layout>
