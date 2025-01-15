@@ -6,8 +6,8 @@ import { presentationTool } from "sanity/presentation";
 import { resolve } from "./src/sanity/lib/resolve";
 
 export default defineConfig({
-  projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID,
-  dataset: import.meta.env.PUBLIC_SANITY_DATASET,
+  projectId: "dt8mf0yl",
+  dataset: "production",
   plugins: [
     structureTool(),
     presentationTool({

@@ -24,7 +24,7 @@ const { data } = await loadQuery<ContentItem[]>({
     <ul>
         {data.map((item: ContentItem) => (
           <li>
-            <a href={`/post/${item.slug}`}>{item.title}</a>
+            <a href={`/news/${item.slug}`}>{item.title}</a>
           </li>
         ))}
       </ul>

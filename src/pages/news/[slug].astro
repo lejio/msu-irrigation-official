@@ -1,33 +1,118 @@
 ---
-import type { SanityDocument } from "@sanity/client";
-import { loadQuery } from "../../sanity/lib/load-query";
-import PortableText from "../../components/PortableText.astro";
-import Layout from "../../layouts/Layout.astro";
+import Layout from '../../layouts/Layout.astro';
+import type { SanityDocument } from '@sanity/client';
+import { loadQuery } from '../../sanity/lib/load-query';
+import PortableText from '../../components/PortableText.astro';
+import type { Article } from '../../../sanity.types'
 
 export const prerender = true;
+
 export async function getStaticPaths() {
-  const { data: posts } = await loadQuery<SanityDocument[]>({
-    query: `*[_type == "article"]`,
+  const { data: slugs } = await loadQuery<SanityDocument[]>({
+    query: `*[_type == "article" && defined(slug.current)]{
+      "slug": slug.current
+    }`,
   });
 
-  return posts.map(({ slug }) => {
-    return {
-      params: {
-        slug: slug.current,
-      },
-    };
-  });
+  return slugs.map(({ slug }) => ({
+    params: { slug },
+  }));
 }
 
-const { params } = Astro;
-
-const { data: post } = await loadQuery<{ title: string; body: any[] }>({
-  query: `*[_type == "article" && slug.current == $slug][0]`,
-  params,
+const { params } = Astro; // Dynamic slug from the URL
+const { data: article } = await loadQuery<Article>({
+  query: `*[_type == "article" && slug.current == $slug][0]{
+    title,
+    author[]->{
+      name,
+      image{
+        asset->{
+          url
+        },
+        alt
+      },
+      socials
+    },
+    publishedAt,
+    sections[]{
+      displayTitle,
+      content,
+      image{
+        sectionImage{
+          asset->{
+            url
+          },
+          alt,
+          caption,
+          imagePosition
+        }
+      }
+    },
+    mainImage{
+      image{
+        asset->{
+          url
+        },
+        alt
+      }
+    }
+  }`,
+  params: { slug: params.slug },
 });
+console.log(article.sections![0].content![0])
 ---
 
 <Layout>
-  <h1>News: {post.title}</h1>
-  <PortableText portableText={post.body} />
+  <article>
+    <header>
+      <h1>{article.title}</h1>
+      <p>{article.author}</p>
+      {article.author && article.author!.length > 0 ? (
+        <div>
+          <h2>Authors</h2>
+          <ul>
+            {article.author!.map((author) => (
+              <li>
+                {author && (
+                  <img src={author.image?.asset?.url} alt={author.image?.alt} />
+                )}
+                <p>{author.name}</p>
+                {author.socials && author.socials.length > 0 && (
+                  <ul>
+                    {author.socials && author.socials.map((social) => (
+                      <li>
+                        <a href={social.url} target="_blank" rel="noopener noreferrer">
+                          {social.platform}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No authors available for this article.</p>
+      )}
+    </header>
+
+    <div>
+      {article.sections?.map((section) => (
+        <section>
+          <h2>{section.displayTitle}</h2>
+          {section.content && <PortableText value={section.content} />}
+          {section.image?.sectionImage && (
+            <div>
+              <img
+                src={section.image?.sectionImage!.asset!.url}
+                alt={section.image.sectionImage.alt}
+              />
+              {section.image && <p>{section.image.sectionImage.caption}</p>}
+            </div>
+          )}
+        </section>
+      ))}
+    </div>
+  </article>
 </Layout>

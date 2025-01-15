@@ -2,12 +2,13 @@
 import { defineField, defineType } from "sanity";
 
 export const authorType = defineType({
-  name: "author",
+  name: "authors",
   type: "document",
   fields: [
     defineField({
       name: "name",
       type: "string",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "slug",
@@ -16,6 +17,12 @@ export const authorType = defineType({
         source: "name",
         maxLength: 96,
       },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "role",
+      type: "string",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "image",
@@ -28,6 +35,13 @@ export const authorType = defineType({
           name: "alt",
           type: "string",
           title: "Alternative Text",
+          description:
+            "Displayed when the image fails to load. Required for accessibility.",
+          hidden: ({ parent }) => !parent?.asset,
+          validation: (Rule) => [Rule.required()],
+          options: {
+            isHighlighted: true,
+          },
         },
       ],
     }),
@@ -39,6 +53,26 @@ export const authorType = defineType({
           type: "block",
           styles: [{ title: "Normal", value: "normal" }],
           lists: [],
+        },
+      ],
+    }),
+    defineField({
+      name: "socials",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "social",
+          fields: [
+            defineField({
+              name: "platform",
+              type: "string",
+            }),
+            defineField({
+              name: "url",
+              type: "url",
+            }),
+          ],
         },
       ],
     }),
