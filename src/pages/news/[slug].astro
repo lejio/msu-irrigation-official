@@ -63,8 +63,6 @@ const { data: article } = await loadQuery<Article>({
   }`,
   params: { slug: params.slug },
 });
-// console.log(article.sections![0].content!.length)
-// console.log(article.author![0].role);
 ---
 
 <Layout>
@@ -79,7 +77,8 @@ const { data: article } = await loadQuery<Article>({
             article.author!.length > 0 &&
             article.author!.map((author) => (
               <div class=" flex flex-row gap-3 max-w-[300px] text-wrap">
-                {author.image ? (
+                {console.log(author)}
+                {author.image && author.image ? (
                   <img
                     class=" rounded-full"
                     src={author.image.asset?.url}
@@ -139,14 +138,14 @@ const { data: article } = await loadQuery<Article>({
             (section) => section.header?.displayTitle
           ).length > 0 && (
             <nav class="w-[1000px] p-5 mx-10 bg-white sticky top-1/4 self-start navbar">
-              <h3>Table</h3>
-              <ul class="flex flex-col gap-2">
+              <h3 class=" text-2xl text-[#18453B]">Contents</h3>
+              <ul class="flex flex-col gap-2 text-slate-500">
                 {article.sections?.map((section, index) => (
                   <li>
                     {section.header?.displayTitle && (
                       <a
                         href={`#section-${index}`}
-                        class="text-blue-600 hover:text-blue-800 transition"
+                        class=" hover:text-[008934] transition text-sm"
                       >
                         {section.header.displayTitle}
                       </a>
@@ -314,15 +313,15 @@ const { data: article } = await loadQuery<Article>({
       sections.forEach((section) => {
         const sectionElement = section as HTMLElement; // Cast to HTMLElement
         const sectionTop = sectionElement.offsetTop;
-        if (window.scrollY >= sectionTop - 50) {
+        if (window.scrollY >= sectionTop - 500) {
           current = section.getAttribute("id") as string;
         }
       });
 
       navbarLinks.forEach((link) => {
-        link.classList.remove("text-blue-800", "font-bold");
+        link.classList.remove("text-[#008934]");
         if (link.getAttribute("href") === `#${current}`) {
-          link.classList.add("text-blue-800", "font-bold");
+          link.classList.add("text-[#008934]");
         }
       });
     };
