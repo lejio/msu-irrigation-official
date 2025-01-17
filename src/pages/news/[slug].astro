@@ -109,7 +109,7 @@ const { data: article } = await loadQuery<Article>({
         )
       }
     </div>
-    <section class="px-[15vw] py-5 flex flex-col">
+    <section class="px-[10vw] py-5 flex flex-col">
       {
         !article.mainImage &&
           article.author!.length > 0 &&
@@ -132,19 +132,44 @@ const { data: article } = await loadQuery<Article>({
             </div>
           ))
       }
-      <div class="flex flex-row gap-10">
-        <div class="w-[200px] p-10 bg-slate-200">
-          <h4>Contents</h4>
-        </div>
-        <div class="p-10 flex flex-col justify-center items-center gap-5">
+      <div class="flex w-full p-10">
+        <!-- Sticky Navbar -->
+        {
+          (article.sections ?? []).filter(
+            (section) => section.header?.displayTitle
+          ).length > 0 && (
+            <nav class="w-[1000px] p-5 mx-10 bg-white sticky top-1/4 self-start navbar">
+              <h3>Table</h3>
+              <ul class="flex flex-col gap-2">
+                {article.sections?.map((section, index) => (
+                  <li>
+                    {section.header?.displayTitle && (
+                      <a
+                        href={`#section-${index}`}
+                        class="text-blue-600 hover:text-blue-800 transition"
+                      >
+                        {section.header.displayTitle}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )
+        }
+
+        <div class="flex flex-col justify-center items-center gap-5">
           {
             article.sections &&
-              article.sections.map((section) => (
+              article.sections.map((section, index) => (
                 <>
                   {!section.image?.sectionImage?.asset && (
                     <>
                       {section.header?.displayTitle && (
-                        <h2 class=" text-3xl my-2 w-full text-left">
+                        <h2
+                          id={`section-${index}`}
+                          class=" text-3xl my-2 w-full text-left section"
+                        >
                           {section.header.displayTitle}
                         </h2>
                       )}
@@ -169,7 +194,10 @@ const { data: article } = await loadQuery<Article>({
                         )}
                       </div>
                       {section.header?.displayTitle && (
-                        <h2 class=" text-3xl my-2">
+                        <h2
+                          id={`section-${index}`}
+                          class=" text-3xl my-2 section"
+                        >
                           {section.header.displayTitle}
                         </h2>
                       )}
@@ -183,7 +211,10 @@ const { data: article } = await loadQuery<Article>({
                   ) === "bottom" && (
                     <div class=" flex flex-col gap-5">
                       {section.header?.displayTitle && (
-                        <h2 class=" text-3xl my-2">
+                        <h2
+                          id={`section-${index}`}
+                          class=" text-3xl my-2 section"
+                        >
                           {section.header.displayTitle}
                         </h2>
                       )}
@@ -210,7 +241,10 @@ const { data: article } = await loadQuery<Article>({
                     <div class=" flex flex-row gap-5 w-full justify-evenly">
                       <div class=" w-1/2">
                         {section.header?.displayTitle && (
-                          <h2 class=" text-3xl my-2">
+                          <h2
+                            id={`section-${index}`}
+                            class=" text-3xl my-2 section"
+                          >
                             {section.header.displayTitle}
                           </h2>
                         )}
@@ -238,7 +272,10 @@ const { data: article } = await loadQuery<Article>({
                     <div class=" flex flex-row-reverse gap-5 w-full justify-evenly">
                       <div class=" w-1/2">
                         {section.header?.displayTitle && (
-                          <h2 class=" text-3xl my-2">
+                          <h2
+                            id={`section-${index}`}
+                            class=" section text-3xl my-2"
+                          >
                             {section.header.displayTitle}
                           </h2>
                         )}
@@ -266,3 +303,30 @@ const { data: article } = await loadQuery<Article>({
     </section>
   </article>
 </Layout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const navbarLinks = document.querySelectorAll(".navbar a");
+    const sections = document.querySelectorAll(".section");
+
+    const handleScroll = () => {
+      let current = "";
+      sections.forEach((section) => {
+        const sectionElement = section as HTMLElement; // Cast to HTMLElement
+        const sectionTop = sectionElement.offsetTop;
+        if (window.scrollY >= sectionTop - 50) {
+          current = section.getAttribute("id") as string;
+        }
+      });
+
+      navbarLinks.forEach((link) => {
+        link.classList.remove("text-blue-800", "font-bold");
+        if (link.getAttribute("href") === `#${current}`) {
+          link.classList.add("text-blue-800", "font-bold");
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+  });
+</script>
