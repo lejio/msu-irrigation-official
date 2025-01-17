@@ -39,12 +39,31 @@ export const articleType = defineType({
               validation: (Rule) => [Rule.required()],
             }),
             defineField({
-              name: "displayTitle",
-              type: "string",
-              title: "Display Title",
-              description: "Section title displayed in the article.",
-              validation: (Rule) => [Rule.required()],
+              name: "header",
+              type: "object",
+              title: "Header",
+              description: "Header of this section. Optional.",
+              fields: [
+                defineField({
+                  name: "displayTitle",
+                  type: "string",
+                  title: "Display Title",
+                  description: "The title of the section that is displayed on the site.",
+                }),
+                // defineField({
+                //   name: "sectionSlug",
+                //   type: "slug",
+                //   title: "Section Slug",
+                //   description: "Used to create slugs for the table of contents on the article page.",
+                //   options: {
+                //     source: (doc, options) => options.parentPath[1],
+                //     maxLength: 96,
+                //   },
+                //   validation: (Rule) => [Rule.required()],
+                // }),
+              ]
             }),
+
             defineField({
               name: "content",
               type: "blockContent",
@@ -69,9 +88,8 @@ export const articleType = defineType({
                       type: "string",
                       title: "Alternative Text",
                       description:
-                        "Displayed when the image fails to load. Required for accessibility.",
+                        "Displayed when the image fails to load. Required for accessibility. (Required)",
                       hidden: ({ parent }) => !parent?.asset,
-                      validation: (Rule) => [Rule.required()],
                       options: {
                         isHighlighted: true,
                       },

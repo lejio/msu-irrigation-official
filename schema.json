@@ -891,10 +891,27 @@
                 },
                 "optional": true
               },
-              "displayTitle": {
+              "header": {
                 "type": "objectAttribute",
                 "value": {
-                  "type": "string"
+                  "type": "object",
+                  "attributes": {
+                    "displayTitle": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      },
+                      "optional": true
+                    },
+                    "sectionSlug": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "slug"
+                      },
+                      "optional": true
+                    }
+                  }
                 },
                 "optional": true
               },

@@ -125,7 +125,8 @@ export type Article = {
   _rev: string;
   title?: string;
   slug?: Slug;
-  author: Array<Authors>;
+  displayTitle?: string;
+  author?: Array<Authors>;
   mainImage?: {
     image?: {
       asset?: SanityImageAsset;
@@ -139,7 +140,10 @@ export type Article = {
   publishedAt?: string;
   sections?: Array<{
     title?: string;
-    displayTitle?: string;
+    header?: {
+      displayTitle?: string;
+      sectionSlug?: Slug;
+    };
     content?: Array<{
       children?: Array<{
         marks?: Array<string>;

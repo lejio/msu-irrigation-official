@@ -1,9 +1,10 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import type { SanityDocument } from '@sanity/client';
-import { loadQuery } from '../../sanity/lib/load-query';
-import PortableText from '../../components/PortableText.astro';
-import type { Article } from '../../../sanity.types'
+import Layout from "../../layouts/Layout.astro";
+import type { SanityDocument } from "@sanity/client";
+import { loadQuery } from "../../sanity/lib/load-query";
+import PortableText from "../../components/PortableText.astro";
+import PortableTextSlots from "../../components/PortableTextSlots.astro";
+import type { Article } from "../../../sanity.types";
 
 export const prerender = true;
 
@@ -25,6 +26,7 @@ const { data: article } = await loadQuery<Article>({
     title,
     author[]->{
       name,
+      role,
       image{
         asset->{
           url
@@ -35,7 +37,9 @@ const { data: article } = await loadQuery<Article>({
     },
     publishedAt,
     sections[]{
-      displayTitle,
+      header{
+        displayTitle
+      },
       content,
       image{
         sectionImage{
@@ -59,60 +63,206 @@ const { data: article } = await loadQuery<Article>({
   }`,
   params: { slug: params.slug },
 });
-console.log(article.sections![0].content![0])
+// console.log(article.sections![0].content!.length)
+// console.log(article.author![0].role);
 ---
 
 <Layout>
   <article>
-    <header>
-      <h1>{article.title}</h1>
-      <p>{article.author}</p>
-      {article.author && article.author!.length > 0 ? (
-        <div>
-          <h2>Authors</h2>
-          <ul>
-            {article.author!.map((author) => (
-              <li>
-                {author && (
-                  <img src={author.image?.asset?.url} alt={author.image?.alt} />
+    <div class="flex flex-row">
+      <header
+        class="w-[50%] bg-[#18453B] p-20 text-white flex flex-col gap-10 justify-center items-center"
+      >
+        <h2 class="text-center text-5xl">{article.title}</h2>
+        {
+          article.mainImage &&
+            article.author!.length > 0 &&
+            article.author!.map((author) => (
+              <div class=" flex flex-row gap-3 max-w-[300px] text-wrap">
+                {author.image ? (
+                  <img
+                    class=" rounded-full"
+                    src={author.image.asset?.url}
+                    alt={author.image.alt}
+                    width="50"
+                  />
+                ) : (
+                  <div class=" bg-slate-600 w-[50px] h-[50px] rounded-full" />
                 )}
-                <p>{author.name}</p>
-                {author.socials && author.socials.length > 0 && (
-                  <ul>
-                    {author.socials && author.socials.map((social) => (
-                      <li>
-                        <a href={social.url} target="_blank" rel="noopener noreferrer">
-                          {social.platform}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p>No authors available for this article.</p>
-      )}
-    </header>
-
-    <div>
-      {article.sections?.map((section) => (
-        <section>
-          <h2>{section.displayTitle}</h2>
-          {section.content && <PortableText value={section.content} />}
-          {section.image?.sectionImage && (
-            <div>
-              <img
-                src={section.image?.sectionImage!.asset!.url}
-                alt={section.image.sectionImage.alt}
-              />
-              {section.image && <p>{section.image.sectionImage.caption}</p>}
-            </div>
-          )}
-        </section>
-      ))}
+                <div class=" flex flex-col">
+                  <h3 class=" text-lg">{author.name}</h3>
+                  <p class=" text-[#008934] text-sm">{author.role}</p>
+                </div>
+              </div>
+            ))
+        }
+      </header>
+      {
+        article.mainImage && (
+          <div class="relative w-full max-w-[50%] h-[500px] overflow-hidden bg-gray-200">
+            <img
+              src={article.mainImage.image?.asset?.url}
+              alt={article.mainImage.image?.alt}
+              class="w-full h-full object-cover object-center"
+            />
+          </div>
+        )
+      }
     </div>
+    <section class="px-[15vw] py-5 flex flex-col">
+      {
+        !article.mainImage &&
+          article.author!.length > 0 &&
+          article.author!.map((author) => (
+            <div class=" flex flex-row gap-3 max-w-[300px] text-wrap">
+              {author.image ? (
+                <img
+                  class=" rounded-full"
+                  src={author.image.asset?.url}
+                  alt={author.image.alt}
+                  width="50"
+                />
+              ) : (
+                <div class=" bg-slate-600 w-[50px] h-[50px] rounded-full" />
+              )}
+              <div class=" flex flex-col">
+                <h3 class=" text-lg">{author.name}</h3>
+                <p class=" text-[#008934] text-sm">{author.role}</p>
+              </div>
+            </div>
+          ))
+      }
+      <div class="flex flex-row gap-10">
+        <div class="w-[200px] p-10 bg-slate-200">
+          <h4>Contents</h4>
+        </div>
+        <div class="p-10 flex flex-col justify-center items-center gap-5">
+          {
+            article.sections &&
+              article.sections.map((section) => (
+                <>
+                  {!section.image?.sectionImage?.asset && (
+                    <>
+                      {section.header?.displayTitle && (
+                        <h2 class=" text-3xl my-2 w-full text-left">
+                          {section.header.displayTitle}
+                        </h2>
+                      )}
+                      <PortableText portableText={section.content} />
+                    </>
+                  )}
+                  {section.image?.sectionImage?.imagePosition?.replace(
+                    /[^\x20-\x7E]/g,
+                    ""
+                  ) === "top" && (
+                    <div class=" flex flex-col gap-5">
+                      <div>
+                        <img
+                          src={section.image.sectionImage.asset?.url}
+                          alt={section.image.sectionImage.alt}
+                          class="w-full"
+                        />
+                        {section.image.sectionImage.caption && (
+                          <p class=" text-center text-sm mb-5">
+                            {section.image.sectionImage.caption}
+                          </p>
+                        )}
+                      </div>
+                      {section.header?.displayTitle && (
+                        <h2 class=" text-3xl my-2">
+                          {section.header.displayTitle}
+                        </h2>
+                      )}
+                      <PortableText portableText={section.content} />
+                    </div>
+                  )}
+
+                  {section.image?.sectionImage?.imagePosition?.replace(
+                    /[^\x20-\x7E]/g,
+                    ""
+                  ) === "bottom" && (
+                    <div class=" flex flex-col gap-5">
+                      {section.header?.displayTitle && (
+                        <h2 class=" text-3xl my-2">
+                          {section.header.displayTitle}
+                        </h2>
+                      )}
+                      <PortableText portableText={section.content} />
+                      <div>
+                        <img
+                          src={section.image.sectionImage.asset?.url}
+                          alt={section.image.sectionImage.alt}
+                          class="w-full"
+                        />
+                        {section.image.sectionImage.caption && (
+                          <p class=" text-center text-sm mb-5">
+                            {section.image.sectionImage.caption}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {section.image?.sectionImage?.imagePosition?.replace(
+                    /[^\x20-\x7E]/g,
+                    ""
+                  ) === "left" && (
+                    <div class=" flex flex-row gap-5 w-full justify-evenly">
+                      <div class=" w-1/2">
+                        {section.header?.displayTitle && (
+                          <h2 class=" text-3xl my-2">
+                            {section.header.displayTitle}
+                          </h2>
+                        )}
+                        <PortableText portableText={section.content} />
+                      </div>
+                      <div class=" max-w-[50%]">
+                        <img
+                          src={section.image.sectionImage.asset?.url}
+                          alt={section.image.sectionImage.alt}
+                          class="w-full"
+                        />
+                        {section.image.sectionImage.caption && (
+                          <p class=" text-center text-sm mb-5">
+                            {section.image.sectionImage.caption}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {section.image?.sectionImage?.imagePosition?.replace(
+                    /[^\x20-\x7E]/g,
+                    ""
+                  ) === "right" && (
+                    <div class=" flex flex-row-reverse gap-5 w-full justify-evenly">
+                      <div class=" w-1/2">
+                        {section.header?.displayTitle && (
+                          <h2 class=" text-3xl my-2">
+                            {section.header.displayTitle}
+                          </h2>
+                        )}
+                        <PortableText portableText={section.content} />
+                      </div>
+                      <div class=" max-w-[50%]">
+                        <img
+                          src={section.image.sectionImage.asset?.url}
+                          alt={section.image.sectionImage.alt}
+                          class="w-full"
+                        />
+                        {section.image.sectionImage.caption && (
+                          <p class=" text-center text-sm mb-5">
+                            {section.image.sectionImage.caption}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))
+          }
+        </div>
+      </div>
+    </section>
   </article>
 </Layout>
