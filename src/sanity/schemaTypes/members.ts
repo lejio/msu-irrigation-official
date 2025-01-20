@@ -8,79 +8,75 @@ export const membersType = defineType({
     defineField({
       name: "name",
       type: "string",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "people",
-      title: "People in the Lab",
+      name: "slug",
+      type: "slug",
+      options: {
+        source: "name",
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "role",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "title",
+      type: "reference",
+      validation: (Rule) => Rule.required(),
+      to: [{ type: "title" }],
+    }),
+    defineField({
+      name: "image",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: "alt",
+          type: "string",
+          title: "Alternative Text",
+          description:
+            "Displayed when the image fails to load. Required for accessibility.",
+          hidden: ({ parent }) => !parent?.asset,
+          validation: (Rule) => [Rule.required()],
+          options: {
+            isHighlighted: true,
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "bio",
       type: "array",
       of: [
         {
-          name: "Role",
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [],
+        },
+      ],
+    }),
+    defineField({
+      name: "socials",
+      type: "array",
+      of: [
+        {
           type: "object",
+          name: "social",
           fields: [
             defineField({
-              name: "Role",
+              name: "platform",
               type: "string",
             }),
             defineField({
-              name: "People",
-              type: "array",
-              of: [
-                {
-                  name: "Member",
-                  type: "object",
-                  fields: [
-                    defineField({
-                      name: "name",
-                      type: "string",
-                    }),
-                    defineField({
-                      name: "image",
-                      type: "image",
-                      options: {
-                        hotspot: true,
-                      },
-                      fields: [
-                        {
-                          name: "alt",
-                          type: "string",
-                          title: "Alternative Text",
-                        },
-                      ],
-                    }),
-                    defineField({
-                      name: "bio",
-                      type: "array",
-                      of: [
-                        {
-                          type: "block",
-                          styles: [{ title: "Normal", value: "normal" }],
-                          lists: [],
-                        },
-                      ],
-                    }),
-                    defineField({
-                      name: "socials",
-                      type: "array",
-                      of: [
-                        {
-                          type: "object",
-                          fields: [
-                            defineField({
-                              name: "name",
-                              type: "string",
-                            }),
-                            defineField({
-                              name: "url",
-                              type: "url",
-                            }),
-                          ],
-                        },
-                      ],
-                    }),
-                  ],
-                },
-              ],
+              name: "url",
+              type: "url",
             }),
           ],
         },

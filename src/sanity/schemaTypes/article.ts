@@ -130,7 +130,7 @@ export const articleType = defineType({
   preview: {
     select: {
       title: "title",
-      author: "authors.name",
+      author: "members.name",
       media: "mainImage",
     },
     prepare(selection) {

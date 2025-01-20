@@ -21,11 +21,16 @@ const { data } = await loadQuery<ContentItem[]>({
 ---
 
 <Layout title="News">
-    <ul>
-        {data.map((item: ContentItem) => (
-          <li>
-            <a href={`/news/${item.slug}`}>{item.title}</a>
-          </li>
-        ))}
-      </ul>
+  <header class="p-20 bg-[#18453B] w-full">
+    <h1 class="text-5xl text-center text-white">News</h1>
+  </header>
+  <ul>
+    {
+      data.map((item: ContentItem) => (
+        <li>
+          <a href={`/news/${item.slug}`}>{item.title}</a>
+        </li>
+      ))
+    }
+  </ul>
 </Layout>
