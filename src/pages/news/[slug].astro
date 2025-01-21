@@ -137,7 +137,7 @@ const { data: article } = await loadQuery<Article>({
           (article.sections ?? []).filter(
             (section) => section.header?.displayTitle
           ).length > 0 && (
-            <nav class="w-[1000px] p-5 mx-10 bg-white sticky top-1/4 self-start navbar">
+            <nav class="w-[1000px] p-5 mx-10 bg-white sticky top-[10%] self-start navbar">
               <h3 class=" text-2xl text-[#18453B]">Contents</h3>
               <ul class="flex flex-col gap-2 text-slate-500">
                 {article.sections?.map((section, index) => (
@@ -237,7 +237,7 @@ const { data: article } = await loadQuery<Article>({
                     /[^\x20-\x7E]/g,
                     ""
                   ) === "left" && (
-                    <div class=" flex flex-row gap-5 w-full justify-evenly">
+                    <div class=" flex flex-row-reverse gap-5 w-full justify-evenly">
                       <div class=" w-1/2">
                         {section.header?.displayTitle && (
                           <h2
@@ -268,7 +268,7 @@ const { data: article } = await loadQuery<Article>({
                     /[^\x20-\x7E]/g,
                     ""
                   ) === "right" && (
-                    <div class=" flex flex-row-reverse gap-5 w-full justify-evenly">
+                    <div class=" flex flex-row gap-5 w-full justify-evenly">
                       <div class=" w-1/2">
                         {section.header?.displayTitle && (
                           <h2

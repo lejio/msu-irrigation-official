@@ -4,56 +4,65 @@ import { loadQuery } from "../sanity/lib/load-query";
 import PortableText from "../components/PortableText.astro";
 
 interface Social {
-  name: string;
+  platform: string;
   url: string;
 }
 
 interface Member {
   name: string;
+  slug?: string;
+  role: string;
   imageUrl?: string;
   alt?: string;
   bio: Array<any>;
   socials: Social[];
 }
 
-interface Role {
-  Role: string;
-  People: Member[];
+interface Title {
+  title_name: string; // Reflects the `title_name` field in the `title` schema
 }
 
-interface Members {
+interface TitleSection {
+  title: Title;
+  title_members: Member[];
+}
+
+interface Team {
   name: string;
-  people: Role[];
+  slug: string;
+  title_sections: TitleSection[];
 }
 
-interface TextChild {
-  text: string;
-}
-
-interface Block {
-  children: TextChild[];
-}
-
-const query = `*[_type == "members"]{
+const query = `*[_type == "team"] {
   name,
-  people[]{
-    Role,
-    People[]{
+  slug,
+  title_sections[] {
+    title-> {
+      title_name // Updated to reflect "title_name" in the "title" schema
+    },
+    title_members[]-> {
       name,
-      "imageUrl": image.asset->url,
-      image{
+      slug,
+      role,
+      title-> {
+        title_name // Updated to reflect "title_name" in the "title" schema
+      },
+      image {
+        asset-> {
+          url
+        },
         alt
       },
       bio,
-      socials[]{
-        name,
+      socials[] {
+        platform,
         url
       }
     }
   }
 }`;
 
-const { data } = await loadQuery<Members[]>({
+const { data } = await loadQuery<Team[]>({
   query,
   params: {},
 });
@@ -64,58 +73,61 @@ const { data } = await loadQuery<Members[]>({
     <div class="p-20 bg-[#18453B] w-full">
       <h1 class="text-white text-center text-5xl">Lab Members</h1>
     </div>
-    <!-- <div>
-      {data[0].people[0].People[0].name}
-    </div> -->
     <div class="p-20">
-      {
-        data[0]?.people.map((role: Role) => (
-          <section class=" p-10">
-            <h2 class=" text-4xl text-center">{role.Role}</h2>
-            <ul>
-              {role.People?.map((member: Member) => (
-                <li class=" p-10">
-                  <div class=" flex flex-row gap-10">
-                    <img
-                      src={member.imageUrl}
-                      alt={member.alt || member.name}
-                      width="300"
-                    />
-                    <div>
-                      <h3 class=" text-3xl">{member.name}</h3>
-                      {member.bio && (
-                        <div>
-                          {member.bio.map((block: Block) => (
-                            <p>
-                              <PortableText portableText={block} />
-                            </p>
-                          ))}
-                        </div>
+      {data.map((team: Team) => (
+        <section class="mb-20">
+          <h2 class="text-4xl text-center mb-10">{team.name}</h2>
+          {team.title_sections.map((section: TitleSection) => (
+            <div class="mb-10">
+              <h3 class="text-3xl mb-5">{section.title.title_name}</h3>
+              <ul>
+                {section.title_members.map((member: Member) => (
+                  <li class="p-10 mb-10 border-b border-gray-300">
+                    <div class="flex flex-row gap-10">
+                      {member.imageUrl && (
+                        <img
+                          src={member.imageUrl}
+                          alt={member.alt || member.name}
+                          width="300"
+                        />
                       )}
-                      {member.socials && member.socials.length > 0 && (
-                        <ul>
-                          {member.socials.map((social) => (
-                            <li>
-                              <a
-                                href={social.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class=" text-[#008934]"
-                              >
-                                {social.name}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      <div>
+                        <h4 class="text-2xl">{member.name}</h4>
+                        {member.role && <p class="text-sm">{member.role}</p>}
+                        {member.bio && (
+                          <div class="mt-5">
+                            {member.bio.map((block: any) => (
+                              <p>
+                                <PortableText portableText={block} />
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                        {member.socials && member.socials.length > 0 && (
+                          <ul class="mt-5">
+                            {member.socials.map((social: Social) => (
+                              <li>
+                                <a
+                                  href={social.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  class="text-[#008934]"
+                                >
+                                  {social.platform}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
-      }
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      ))}
     </div>
   </div>
 </Layout>

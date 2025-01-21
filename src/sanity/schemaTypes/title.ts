@@ -6,12 +6,12 @@ export const titleType = defineType({
   type: "document",
   fields: [
     defineField({
-      name: "title",
+      name: "title_name",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "slug",
+      name: "title_slug",
       type: "slug",
       options: {
         source: "title",
@@ -22,7 +22,7 @@ export const titleType = defineType({
   ],
   preview: {
     select: {
-      title: "title",
+      title: "title_name",
     },
   },
 });
