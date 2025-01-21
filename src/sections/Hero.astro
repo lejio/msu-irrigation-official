@@ -1,56 +1,9 @@
 ---
-import { Image } from "astro:assets";
-import Background from "../assets/hero_background.jpg";
-import Background2 from "../assets/hero_background2.png";
-import Background3 from "../assets/hero_background3.png";
-import Outreach from "../assets/outreach.jpeg";
+import Header from "../components/Header.astro"
 ---
 
-<div>
-  <!-- Outer container handles layout -->
-  <div class="flex h-[950px] w-[100vw]">
-    <!-- Inner container matches the image’s size and is `relative` -->
-    <div
-      class="relative max-h-[450px] w-[100vw] flex flex-col justify-start align-middle"
-    >
-      <!-- Actual image -->
-      <Image
-        src={Background3}
-        alt="Background Farmland"
-        class="w-full h-full object-cover"
-      />
+<Header>
+    <h1 class="flex flex-col text-8xl font-bold text-white">THE DONG</h1>
+    <p class="text-4xl text-[#eaffc6]">IRRIGATION LABORATORY</p>
+</Header>
 
-      <!-- Dim overlay exactly covering the image -->
-      <div
-        class="absolute inset-0 bg-black bg-opacity-35 pointer-events-none text-center flex flex-col justify-center align-middle items-center"
-      >
-        <h1 class="flex flex-col text-8xl font-bold text-white">THE DONG</h1>
-        <p class="text-4xl text-[#eaffc6]">IRRIGATION LABORATORY</p>
-      </div>
-      <div class=" flex justify-evenly gap-5">
-        <div
-          class="max-w-[1800px] w-full flex flex-row justify-evenly p-10"
-        >
-          <div
-            class="flex flex-col justify-center text-left text-[#18453B] max-w-[650px]"
-          >
-            <h2 class="text-5xl">Welcome!</h2>
-            <br />
-            <p class="text-2xl">
-              Our mission is to promote efficient and sustainable irrigation
-              management through research and outreach activities to conserve
-              water and energy, improve disease management, reduce nutrient
-              leaching, increase crop yield and grain quality, and maximize
-              return on investments.
-            </p>
-          </div>
-          <Image
-            src={Outreach}
-            alt="MSU outreach"
-            class="w-auto max-w-[900px] h-auto max-h-[400px]"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
