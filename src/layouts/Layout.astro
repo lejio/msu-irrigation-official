@@ -19,12 +19,12 @@ const visualEditingEnabled =
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/src/styles/fonts.css" />
     <meta name="generator" content={Astro.generator} />
-    <ClientRouter />
     <title>{title}</title>
   </head>
   <body>
     <Navbar />
     <slot />
+    <!-- <ClientRouter /> -->
     <VisualEditing enabled={visualEditingEnabled} zIndex={1000} />
     <script>
       document.addEventListener("DOMContentLoaded", () => {
