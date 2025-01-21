@@ -5,7 +5,9 @@ import { blockContentType } from "./blockContent";
 import { articleType } from "./article";
 import { teamType } from "./team";
 import { titleType } from "./title";
+import { publicationType } from "./publications";
+import { researchType } from "./research";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, articleType, teamType,membersType, titleType],
+  types: [publicationType, researchType, blockContentType, articleType, teamType,membersType, titleType],
 };
