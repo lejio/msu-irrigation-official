@@ -1,9 +1,157 @@
 ---
-import Layout from "../../layouts/Layout.astro"
+import Layout from "../../layouts/Layout.astro";
+import { loadQuery } from "../../sanity/lib/load-query";
+import PortableText from "../../components/PortableText.astro";
+
+// Define TypeScript interfaces to describe the data shape
+interface PublicationImageAsset {
+  url: string;
+}
+
+interface PublicationImage {
+  asset?: PublicationImageAsset;
+  publication_image_alt?: string;
+  publication_image_caption?: string;
+}
+
+interface PublicationImageField {
+  publication_image?: PublicationImage;
+}
+
+interface Member {
+  name: string;
+  slug?: string;
+  role?: string;
+  // Add any other fields from the `members` schema if needed
+}
+
+interface BlockChild {
+  text: string;
+}
+
+interface Block {
+  _key: string;
+  children?: BlockChild[];
+  // Add any other fields if your block schema includes them
+}
+
+interface Publication {
+  publication_title: string;
+  publication_slug: {
+    current: string;
+  };
+  publication_authors: Member[];
+  publication_image_field?: {
+    publication_image?: {
+      asset?: {
+        url: string;
+      };
+      publication_image_alt?: string;
+      publication_image_caption?: string;
+    };
+  };
+  publishedAt: string;
+  abstract: Block[];
+  publication_link: string;
+}
+
+// GROQ query to fetch all `publication` documents
+const query = `*[_type == "publication"]{
+  publication_title,
+  "publication_slug": publication_slug{current},
+  "publication_authors": publication_authors[]->{
+    name,
+    slug,
+    role
+  },
+  publication_image_field{
+    publication_image{
+      asset->{
+        url
+      },
+      publication_image_alt,
+      publication_image_caption
+    }
+  },
+  publishedAt,
+  abstract,
+  publication_link
+}`;
+
+const { data } = await loadQuery<Publication[]>({
+  query,
+  params: {},
+});
 ---
 
 <Layout title="Publications">
-    <header class="p-20 bg-[#18453B] w-full">
-        <h1 class=" text-5xl text-center text-white">Publications</h1>
-    </header>
+  <div class="max-w-screen-lg mx-auto p-6">
+    <h1 class="text-4xl font-bold mb-8">Publications</h1>
+
+    {data && data.length > 0 ? (
+      data.map((pub) => (
+        <article class="mb-12 border-b pb-6" style="margin-bottom: 2rem;">
+          <h2 class="text-2xl font-semibold">{pub.publication_title}</h2>
+          
+          {/* Author Names */}
+          {pub.publication_authors && pub.publication_authors.length > 0 && (
+            <p class="mt-2 italic text-gray-700">
+              By {pub.publication_authors.map((author) => author.name).join(", ")}
+            </p>
+          )}
+
+          {/* Published Date */}
+          {pub.publishedAt && (
+            <p class="text-sm text-gray-500">
+              Published: {new Date(pub.publishedAt).toLocaleDateString()}
+            </p>
+          )}
+
+          {/* Publication Image */}
+          {pub.publication_image_field?.publication_image?.asset?.url && (
+            <figure class="my-4">
+              <img
+                src={pub.publication_image_field.publication_image.asset.url}
+                alt={
+                  pub.publication_image_field.publication_image.publication_image_alt ||
+                  pub.publication_title
+                }
+                class="max-w-full h-auto"
+              />
+              {pub.publication_image_field.publication_image.publication_image_caption && (
+                <figcaption class="text-sm text-gray-600">
+                  {pub.publication_image_field.publication_image.publication_image_caption}
+                </figcaption>
+              )}
+            </figure>
+          )}
+
+          {/* Abstract (Rich Text) */}
+          {pub.abstract && pub.abstract.length > 0 && (
+            <div class="mt-4">
+              <h3 class="text-xl font-medium mb-2">Abstract</h3>
+              {/* PortableText can loop through the blocks and render them */}
+              <PortableText portableText={pub.abstract} />
+            </div>
+          )}
+
+          {/* Link to Publication */}
+          {pub.publication_link && (
+            <p class="mt-4">
+              <a
+                href={pub.publication_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 underline"
+              >
+                View Publication
+              </a>
+            </p>
+          )}
+        </article>
+      ))
+    ) : (
+      <p>No publications found.</p>
+    )}
+  </div>
 </Layout>

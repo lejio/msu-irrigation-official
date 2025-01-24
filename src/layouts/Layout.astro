@@ -24,7 +24,7 @@ const visualEditingEnabled =
   <body>
     <Navbar />
     <slot />
-    <!-- <ClientRouter /> -->
+    <ClientRouter />
     <VisualEditing enabled={visualEditingEnabled} zIndex={1000} />
     <script>
       document.addEventListener("DOMContentLoaded", () => {
