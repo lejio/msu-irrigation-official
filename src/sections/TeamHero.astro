@@ -1,0 +1,27 @@
+---
+import Header from "../components/Header.astro";
+import { Image } from "astro:assets";
+import Background from "../assets/hero_background3.png";
+import Background2 from "../assets/hero_background_vertical.jpg";
+---
+
+<div class="flex h-[350px] w-full" transition:name="hero-container">
+  <div
+    class="relative max-h-[350px] w-full flex flex-col justify-start align-middle"
+    transition:name="hero-mask-container"
+  >
+    <Image
+      src={Background2}
+      alt="Background Farmland"
+      class="w-full h-full object-cover object-[50%_40%]"
+      transition:name="hero-image"
+    />
+
+    <div
+      class="absolute inset-0 bg-black bg-opacity-35 pointer-events-none text-center flex flex-col justify-center align-middle items-center"
+      transition:name="hero-text-container"
+    >
+      <h1 class="flex flex-col text-8xl font-bold text-white" transition:name="hero-text">Lab Members</h1>
+    </div>
+  </div>
+</div>
