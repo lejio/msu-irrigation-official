@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { loadQuery } from "../../sanity/lib/load-query";
+import NewsHero from "../../sections/NewsHero.astro";
 
 interface ContentItem {
   _id: string;
@@ -21,9 +22,7 @@ const { data } = await loadQuery<ContentItem[]>({
 ---
 
 <Layout title="News">
-  <header class="p-20 bg-[#18453B] w-full">
-    <h1 class="text-5xl text-center text-white">News</h1>
-  </header>
+  <NewsHero />
   <ul>
     {
       data.map((item: ContentItem) => (

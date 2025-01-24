@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { loadQuery } from "../../sanity/lib/load-query";
 import PortableText from "../../components/PortableText.astro";
+import PublicationHero from "../../sections/PublicationHero.astro";
 
 // Define TypeScript interfaces to describe the data shape
 interface PublicationImageAsset {
@@ -85,9 +86,8 @@ const { data } = await loadQuery<Publication[]>({
 ---
 
 <Layout title="Publications">
+  <PublicationHero />
   <div class="max-w-screen-lg mx-auto p-6">
-    <h1 class="text-4xl font-bold mb-8">Publications</h1>
-
     {data && data.length > 0 ? (
       data.map((pub) => (
         <article class="mb-12 border-b pb-6" style="margin-bottom: 2rem;">
